@@ -1,0 +1,17 @@
+"computeinstance.0005": {
+    "solutionExposure": "prod",
+    "name": "${Messages.solutionsHub.solutions.computeInstance.solutionName()}",
+    "description": "${Messages.solutionsHub.solutions.computeInstance.stackDescription()}",
+    "longDescription": {
+        "description": "${Messages.solutionsHub.solutions.computeInstance.longDescription()}"
+    },
+    "icon": {
+        "iconLine1": "Compute",
+        "iconLine2": "Instance",
+        "iconLine3": ""
+    },
+    "terraformVersion": "0.12.x",
+    "isFreeTier": false,
+    "type": "service",
+    "categoryId": "1"
+}

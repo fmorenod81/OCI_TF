@@ -2,43 +2,34 @@
 // Licensed under the Mozilla Public License v2.0
 
 variable "tenancy_ocid" {
-    default = "ocid1.tenancy.oc1..aaaaaaaakktre6vnlmvoebtn2c23nu7wsrlqphcuy3hmld7qwpfh65icvnvq"
+    description="el Identificador del Tenant"
+    type=string
+    default = ""
 }
 
 variable "user_ocid" {
-  default = "ocid1.user.oc1..aaaaaaaa7gbwah7ik66csdbjyraxgklrvwzk6qtgq266wat2y3krpfranjwq"
+  default = ""
 }
 
 variable "fingerprint" {
-    default = "1d:6d:f7:0e:d4:dd:ce:a7:67:00:83:fa:e6:df:ac:76"
+    default = ""
 }
 
 variable "private_key_path" {
-  default = "C:\\Users\\framoren\\.oci\\oracleidentitycloudservice_francisco.m.moreno-06-14-16-16.pem"
+  default = ""
 }
 
 variable "ssh_public_key" {
-  default = "C:\\Users\\framoren\\.oci\\ssh-key-2021-11-16.key.pub"
+  default = ""
 }
 
 variable "compartment_ocid" {
-    default = "ocid1.compartment.oc1..aaaaaaaarpm23bejxjboprcv53x5nxkbsd3pyolceu7y3ttfd5yoq6xfx3iq"
+    default = ""
 }
 
 variable "region" {
-    default = "us-ashburn-1"
+    default = ""
 }
-
-
-provider "oci" {
-  region           = var.region
-  tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-}
-
-
 
 variable "instance_shape" {
   default = "VM.Standard.E2.1.Micro" # Or VM.Standard.E2.1.Micro Or VM.Standard.A1.Flex
@@ -48,18 +39,36 @@ variable "instance_ocpus" { default = 1 }
 
 variable "instance_shape_config_memory_in_gbs" { default = 6 }
 
-data "oci_identity_availability_domain" "ad" {
-  compartment_id = var.tenancy_ocid
-  ad_number      = 1
+provider "oci" {
+  region           = var.region
+  tenancy_ocid     = var.tenancy_ocid
+  user_ocid        = var.user_ocid
+  fingerprint      = var.fingerprint
+  private_key_path = var.private_key_path
 }
-
+# See https://docs.oracle.com/iaas/images/
+data "oci_core_images" "test_images" {
+  compartment_id           = var.compartment_ocid
+  operating_system         = "Oracle Linux"
+  operating_system_version = "8"
+  shape                    = var.instance_shape
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
+}
 /* Network */
-
 resource "oci_core_virtual_network" "test_vcn" {
   cidr_block     = "10.1.0.0/16"
   compartment_id = var.compartment_ocid
   display_name   = "testVCN"
   dns_label      = "testvcn"
+}
+output "Public_IP_LoadBalanceador" {
+  value = "http://${oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address}"
+}
+
+data "oci_identity_availability_domain" "ad" {
+  compartment_id = var.tenancy_ocid
+  ad_number      = 1
 }
 
 resource "oci_core_subnet" "test_subnet" {
@@ -164,19 +173,16 @@ resource "oci_core_instance" "free_instance0" {
 #  compartment_id      = var.compartment_ocid
 #  display_name        = "freeInstance1"
 #  shape               = var.instance_shape
-#
-#    create_vnic_details {
+#  create_vnic_details {
 #    subnet_id        = oci_core_subnet.test_subnet.id
 #    display_name     = "primaryvnic"
 #    assign_public_ip = true
 #    hostname_label   = "freeinstance1"
 #  }
-#
 #  source_details {
 #    source_type = "image"
 #    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
 #  }
-# 
 #  metadata = {
 #    ssh_authorized_keys = file(var.ssh_public_key)
 #    user_data = base64encode(file("./cloud-init/vm.cloud-config"))
@@ -255,19 +261,6 @@ data "oci_core_vnic" "app_vnic" {
   vnic_id = data.oci_core_vnic_attachments.app_vnics.vnic_attachments[0]["vnic_id"]
 }
 
-# See https://docs.oracle.com/iaas/images/
-data "oci_core_images" "test_images" {
-  compartment_id           = var.compartment_ocid
-  operating_system         = "Oracle Linux"
-  operating_system_version = "8"
-  shape                    = var.instance_shape
-  sort_by                  = "TIMECREATED"
-  sort_order               = "DESC"
-}
-
 output "Public_Ip_Instancia" {
   value = "http://${data.oci_core_vnic.app_vnic.public_ip_address}"
-}
-output "Public_IP_LoadBalanceador" {
-  value = "http://${oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address}"
 }

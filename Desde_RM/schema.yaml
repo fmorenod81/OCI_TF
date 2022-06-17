@@ -1,0 +1,69 @@
+# Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
+# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
+
+  title: "Creacion Simple Instancia - Terraform RN Claro Jun-2022"
+  stackDescription: ${Messages.solutionsHub.solutions.computeInstance.stackDescription()}
+  schemaVersion: 1.1.0
+  version: "20220617"
+  locale: "en"
+
+  variableGroups:
+  - title: ${Messages.solutionsHub.generalConfig()}
+    visible: false
+    variables:
+    - compartment_ocid
+    - tenancy_ocid
+    - region
+    
+  - title: ${Messages.solutionsHub.requiredConfig()}
+    visible: true  
+    variables:
+    - instance_shape
+
+  - title: ${Messages.solutionsHub.optionalConfig()}
+    visible: true  
+    variables:
+    - ssh_public_key
+    - user_data
+
+
+  variables:
+    compartment_ocid:
+      type: oci:identity:compartment:id
+      # type: string
+      required: true
+      title: ${Messages.solutionsHub.genericVariables.compartment.title()}
+      description: ${Messages.solutionsHub.genericVariables.compartment.description()}
+
+    region:
+      type: oci:identity:region:name
+      required: true
+      title: ${Messages.solutionsHub.genericVariables.region.title()}
+      description: ${Messages.solutionsHub.genericVariables.region.description()}
+
+
+    instance_shape:
+      type: oci:core:instanceshape:name
+      required: true
+      title: ${Messages.solutionsHub.solutions.computeInstance.variables.instance_shape.title()}
+      description: ${Messages.solutionsHub.solutions.computeInstance.variables.instance_shape.description()}
+      default: "VM.Standard.E2.1.Micro"
+      dependsOn:
+        compartmentId: compartment_ocid
+
+    ssh_public_key:
+      type: oci:core:ssh:publickey
+      additionalProps:
+        allowMultiple: true
+      required: false
+      default: [""]
+      pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
+      title: ${Messages.solutionsHub.solutions.computeInstance.variables.ssh_public_key.title()}
+      description: ${Messages.solutionsHub.solutions.computeInstance.variables.ssh_public_key.description()}
+
+    user_data:
+      type: text
+      required: false
+      default: ""
+      title: ${Messages.solutionsHub.solutions.computeInstance.variables.user_data.title()}
+      description: ${Messages.solutionsHub.solutions.computeInstance.variables.user_data.description()}
