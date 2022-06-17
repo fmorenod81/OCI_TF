@@ -41,7 +41,7 @@ provider "oci" {
 
 
 variable "instance_shape" {
-  default = "VM.Standard.E2.1.Micro" # Or VM.Standard.E2.1.Micro
+  default = "VM.Standard.E2.1.Micro" # Or VM.Standard.E2.1.Micro Or VM.Standard.A1.Flex
 }
 
 variable "instance_ocpus" { default = 1 }
@@ -152,14 +152,36 @@ resource "oci_core_instance" "free_instance0" {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
   }
-
+ 
   metadata = {
     ssh_authorized_keys = file(var.ssh_public_key)
     user_data = base64encode(file("./cloud-init/vm.cloud-config"))
   }
 }
 
-
+#resource "oci_core_instance" "free_instance1" {
+#  availability_domain = data.oci_identity_availability_domain.ad.name
+#  compartment_id      = var.compartment_ocid
+#  display_name        = "freeInstance1"
+#  shape               = var.instance_shape
+#
+#    create_vnic_details {
+#    subnet_id        = oci_core_subnet.test_subnet.id
+#    display_name     = "primaryvnic"
+#    assign_public_ip = true
+#    hostname_label   = "freeinstance1"
+#  }
+#
+#  source_details {
+#    source_type = "image"
+#    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+#  }
+# 
+#  metadata = {
+#    ssh_authorized_keys = file(var.ssh_public_key)
+#    user_data = base64encode(file("./cloud-init/vm.cloud-config"))
+#  }
+#}
 
 /* Load Balancer */
 
@@ -203,46 +225,25 @@ resource "oci_load_balancer_backend" "free_load_balancer_test_backend0" {
   load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
   port             = "80"
 }
-
-
-resource "oci_load_balancer_hostname" "test_hostname1" {
-  #Required
-  hostname         = "app.free.com"
-  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
-  name             = "hostname1"
-}
+#resource "oci_load_balancer_backend" "free_load_balancer_test_backend1" {
+#  #Required
+#  backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
+#  ip_address       = oci_core_instance.free_instance1.public_ip
+#  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
+#  port             = "80"
+#}
 
 resource "oci_load_balancer_listener" "load_balancer_listener0" {
   load_balancer_id         = oci_load_balancer_load_balancer.free_load_balancer.id
   name                     = "http"
   default_backend_set_name = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
-  hostname_names           = [oci_load_balancer_hostname.test_hostname1.name]
   port                     = 80
   protocol                 = "HTTP"
-  rule_set_names           = [oci_load_balancer_rule_set.test_rule_set.name]
 
   connection_configuration {
     idle_timeout_in_seconds = "240"
   }
 }
-
-resource "oci_load_balancer_rule_set" "test_rule_set" {
-  items {
-    action = "ADD_HTTP_REQUEST_HEADER"
-    header = "example_header_name"
-    value  = "example_header_value"
-  }
-
-  items {
-    action          = "CONTROL_ACCESS_USING_HTTP_METHODS"
-    allowed_methods = ["GET", "POST"]
-    status_code     = "405"
-  }
-
-  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
-  name             = "test_rule_set_name"
-}
-
 
 data "oci_core_vnic_attachments" "app_vnics" {
   compartment_id      = var.compartment_ocid
