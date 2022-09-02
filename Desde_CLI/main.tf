@@ -168,26 +168,26 @@ resource "oci_core_instance" "free_instance0" {
   }
 }
 
-#resource "oci_core_instance" "free_instance1" {
-#  availability_domain = data.oci_identity_availability_domain.ad.name
-#  compartment_id      = var.compartment_ocid
-#  display_name        = "freeInstance1"
-#  shape               = var.instance_shape
-#  create_vnic_details {
-#    subnet_id        = oci_core_subnet.test_subnet.id
-#    display_name     = "primaryvnic"
-#    assign_public_ip = true
-#    hostname_label   = "freeinstance1"
-#  }
-#  source_details {
-#    source_type = "image"
-#    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
-#  }
-#  metadata = {
-#    ssh_authorized_keys = file(var.ssh_public_key)
-#    user_data = base64encode(file("./cloud-init/vm.cloud-config"))
-#  }
-#}
+resource "oci_core_instance" "free_instance1" {
+  availability_domain = data.oci_identity_availability_domain.ad.name
+  compartment_id      = var.compartment_ocid
+  display_name        = "freeInstance1"
+  shape               = var.instance_shape
+  create_vnic_details {
+    subnet_id        = oci_core_subnet.test_subnet.id
+    display_name     = "primaryvnic"
+    assign_public_ip = true
+    hostname_label   = "freeinstance1"
+  }
+  source_details {
+    source_type = "image"
+    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+  }
+  metadata = {
+    ssh_authorized_keys = file(var.ssh_public_key)
+    user_data = base64encode(file("./cloud-init/vm.cloud-config"))
+  }
+}
 
 /* Load Balancer */
 
@@ -227,17 +227,17 @@ resource "oci_load_balancer_backend_set" "free_load_balancer_backend_set" {
 resource "oci_load_balancer_backend" "free_load_balancer_test_backend0" {
   #Required
   backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
-  ip_address       = oci_core_instance.free_instance0.public_ip
+  ip_address       = oci_core_instance.free_instance0.private_ip
   load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
   port             = "80"
 }
-#resource "oci_load_balancer_backend" "free_load_balancer_test_backend1" {
-#  #Required
-#  backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
-#  ip_address       = oci_core_instance.free_instance1.public_ip
-#  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
-#  port             = "80"
-#}
+resource "oci_load_balancer_backend" "free_load_balancer_test_backend1" {
+  #Required
+  backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
+  ip_address       = oci_core_instance.free_instance1.private_ip
+  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
+  port             = "80"
+}
 
 resource "oci_load_balancer_listener" "load_balancer_listener0" {
   load_balancer_id         = oci_load_balancer_load_balancer.free_load_balancer.id
