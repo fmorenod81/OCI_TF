@@ -55,15 +55,12 @@ data "oci_core_images" "test_images" {
   sort_by                  = "TIMECREATED"
   sort_order               = "DESC"
 }
-/* Network */
+// Network
 resource "oci_core_virtual_network" "test_vcn" {
   cidr_block     = "10.1.0.0/16"
   compartment_id = var.compartment_ocid
   display_name   = "testVCN"
   dns_label      = "testvcn"
-}
-output "Public_IP_LoadBalanceador" {
-  value = "http://${oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address}"
 }
 
 data "oci_identity_availability_domain" "ad" {
@@ -142,15 +139,15 @@ resource "oci_core_security_list" "test_security_list" {
   }
 }
 
-/* Instances */
+// Instances
 
 resource "oci_core_instance" "free_instance0" {
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
   display_name        = "freeInstance0"
   shape               = var.instance_shape
-
-    create_vnic_details {
+  fault_domain = "FAULT-DOMAIN-3"
+  create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
     assign_public_ip = true
@@ -160,6 +157,7 @@ resource "oci_core_instance" "free_instance0" {
   source_details {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    boot_volume_size_in_gbs = 50
   }
  
   metadata = {
@@ -173,6 +171,7 @@ resource "oci_core_instance" "free_instance1" {
   compartment_id      = var.compartment_ocid
   display_name        = "freeInstance1"
   shape               = var.instance_shape
+  fault_domain = "FAULT-DOMAIN-2"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
@@ -182,6 +181,7 @@ resource "oci_core_instance" "free_instance1" {
   source_details {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    boot_volume_size_in_gbs = 50
   }
   metadata = {
     ssh_authorized_keys = file(var.ssh_public_key)
@@ -189,7 +189,7 @@ resource "oci_core_instance" "free_instance1" {
   }
 }
 
-/* Load Balancer */
+// Load Balancer 
 
 resource "oci_load_balancer_load_balancer" "free_load_balancer" {
   #Required
@@ -251,16 +251,15 @@ resource "oci_load_balancer_listener" "load_balancer_listener0" {
   }
 }
 
-data "oci_core_vnic_attachments" "app_vnics" {
-  compartment_id      = var.compartment_ocid
-  availability_domain = data.oci_identity_availability_domain.ad.name
-  instance_id         = oci_core_instance.free_instance0.id
+
+output "Public_IP_LoadBalanceador" {
+  value = "http://${oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address}"
 }
 
-data "oci_core_vnic" "app_vnic" {
-  vnic_id = data.oci_core_vnic_attachments.app_vnics.vnic_attachments[0]["vnic_id"]
+output "Public_Ip_Salida0" {
+  value = "${oci_core_instance.free_instance0.public_ip}"
 }
 
-output "Public_Ip_Instancia" {
-  value = "http://${data.oci_core_vnic.app_vnic.public_ip_address}"
+output "Public_Ip_Salida1" {
+  value = "${oci_core_instance.free_instance1.public_ip}"
 }

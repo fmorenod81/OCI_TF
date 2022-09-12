@@ -1,3 +1,7 @@
+tenancy_ocid="ocid1.tenancy.oc1..aaaaaaaakktre6vnlmvoebtn2c23nu7wsrlqphcuy3hmld7qwpfh65icvnvq"
+user_ocid="ocid1.user.oc1..aaaaaaaa7gbwah7ik66csdbjyraxgklrvwzk6qtgq266wat2y3krpfranjwq"
+fingerprint="1d:6d:f7:0e:d4:dd:ce:a7:67:00:83:fa:e6:df:ac:76"
+compartment_ocid="ocid1.compartment.oc1..aaaaaaaarpm23bejxjboprcv53x5nxkbsd3pyolceu7y3ttfd5yoq6xfx3iq"
 private_key_path="C:\\Users\\framoren\\.oci\\oracleidentitycloudservice_francisco.m.moreno-06-14-16-16.pem"
 ssh_public_key="C:\\Users\\framoren\\.oci\\ssh-key-2021-11-16.key.pub"
 region="us-ashburn-1"
