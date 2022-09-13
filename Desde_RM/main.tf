@@ -1,17 +1,26 @@
+// Copyright (c) 2017, 2022, Oracle and/or its affiliates. All rights reserved.
+// Licensed under the Mozilla Public License v2.0
 
-// Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
-// Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
-
-terraform {
-  required_version = ">= 0.12.0"
+# See https://docs.oracle.com/iaas/images/
+data "oci_core_images" "test_images" {
+  compartment_id           = var.compartment_ocid
+  operating_system         = "Oracle Linux"
+  operating_system_version = "8"
+  shape                    = var.instance_shape
+  sort_by                  = "TIMECREATED"
+  sort_order               = "DESC"
 }
-
-
+// Network
 resource "oci_core_virtual_network" "test_vcn" {
   cidr_block     = "10.1.0.0/16"
   compartment_id = var.compartment_ocid
   display_name   = "testVCN"
   dns_label      = "testvcn"
+}
+# add data source to list AD1 name in the tenancy. Should work for both single and multi Ad region 
+data "oci_identity_availability_domain" "ad" {
+  compartment_id = var.tenancy_ocid
+  ad_number      = 1
 }
 resource "oci_core_subnet" "test_subnet" {
   cidr_block        = "10.1.20.0/24"
@@ -84,45 +93,29 @@ resource "oci_core_security_list" "test_security_list" {
   }
 }
 
+// Instances
 
-
-data "oci_core_images" "test_images" {
-  compartment_id           = var.compartment_ocid
-  operating_system         = "Oracle Linux"
-  operating_system_version = "8"
-  shape                    = var.instance_shape
-  sort_by                  = "TIMECREATED"
-  sort_order               = "DESC"
-}
-
-# add data source to list AD1 name in the tenancy. Should work for both single and multi Ad region 
-data "oci_identity_availability_domain" "ad" {
-  compartment_id = var.tenancy_ocid
-  ad_number      = 1
-}
-
-resource "oci_core_instance" "this" {
-  # availability_domain  = data.oci_core_subnet.this.availability_domain
+resource "oci_core_instance" "free_instance0" {
   availability_domain  =  data.oci_identity_availability_domain.ad.name
   compartment_id       = var.compartment_ocid
-  display_name         = "freeInstance0_desdeRN"
-
+  display_name         = "freeInstance0_desdeRM"
   shape                = var.instance_shape
-
-  create_vnic_details {
+  fault_domain = "FAULT-DOMAIN-1"
+    create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
     assign_public_ip = true
     hostname_label   = "freeinstance0"
   }
-  metadata = {
-    ssh_authorized_keys = var.ssh_public_key
-    user_data           = var.user_data
-  }
-
   source_details {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    boot_volume_size_in_gbs = 50
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    user_data           = base64encode(var.user_data)
   }
   
 }

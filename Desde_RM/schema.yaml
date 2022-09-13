@@ -1,7 +1,7 @@
 # Copyright (c) 2020, Oracle and/or its affiliates. All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl.
 
-  title: "Creacion Simple Instancia - Terraform RN Claro Jun-2022"
+  title: "Creacion Instancia Sencilla - Usando Modelo de Terraform para Resource Manager"
   stackDescription: ${Messages.solutionsHub.solutions.computeInstance.stackDescription()}
   schemaVersion: 1.1.0
   version: "20220617"

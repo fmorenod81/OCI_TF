@@ -1,3 +1,5 @@
+// ALWAYS FREE
+
 tenancy_ocid="ocid1.tenancy.oc1..aaaaaaaakktre6vnlmvoebtn2c23nu7wsrlqphcuy3hmld7qwpfh65icvnvq"
 user_ocid="ocid1.user.oc1..aaaaaaaa7gbwah7ik66csdbjyraxgklrvwzk6qtgq266wat2y3krpfranjwq"
 fingerprint="1d:6d:f7:0e:d4:dd:ce:a7:67:00:83:fa:e6:df:ac:76"
@@ -5,4 +7,18 @@ compartment_ocid="ocid1.compartment.oc1..aaaaaaaarpm23bejxjboprcv53x5nxkbsd3pyol
 private_key_path="C:\\Users\\framoren\\.oci\\oracleidentitycloudservice_francisco.m.moreno-06-14-16-16.pem"
 ssh_public_key="C:\\Users\\framoren\\.oci\\ssh-key-2021-11-16.key.pub"
 region="us-ashburn-1"
-instance_shape="VM.Standard.E2.1.Micro"
+//instance_shape="VM.Standard.A1.Flex"
+
+
+
+//COMPARTIDA
+/*
+tenancy_ocid="ocid1.tenancy.oc1..aaaaaaaal32hpbj5vofrsbblgamixhhhlvisfnafefmmfdeybpgwec4zizsq"
+user_ocid="ocid1.user.oc1..aaaaaaaaev3zmjvz6g3st6wgypwjuj5alxpwcwtrs4sc7cmnwzdsim4xeuiq"
+fingerprint="3c:4f:e5:d2:96:a1:3e:55:3c:a6:f9:cc:25:33:72:d0"
+compartment_ocid="ocid1.compartment.oc1..aaaaaaaa4ewy3s376yq5xuvtpwe5nvksw6qjif2qwtor2vjaqcsmd5sw47fq"
+private_key_path="C:\\Users\\framoren\\.oci\\oci_api_key.pem"
+ssh_public_key="C:\\Users\\framoren\\.oci\\ssh-key-2021-11-16.key.pub"
+region="us-ashburn-1"
+instance_shape="VM.Standard.A1.Flex"
+*/

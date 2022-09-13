@@ -1,51 +1,6 @@
 // Copyright (c) 2017, 2022, Oracle and/or its affiliates. All rights reserved.
 // Licensed under the Mozilla Public License v2.0
 
-variable "tenancy_ocid" {
-    description="el Identificador del Tenant"
-    type=string
-    default = ""
-}
-
-variable "user_ocid" {
-  default = ""
-}
-
-variable "fingerprint" {
-    default = ""
-}
-
-variable "private_key_path" {
-  default = ""
-}
-
-variable "ssh_public_key" {
-  default = ""
-}
-
-variable "compartment_ocid" {
-    default = ""
-}
-
-variable "region" {
-    default = ""
-}
-
-variable "instance_shape" {
-  default = "VM.Standard.E2.1.Micro" # Or VM.Standard.E2.1.Micro Or VM.Standard.A1.Flex
-}
-
-variable "instance_ocpus" { default = 1 }
-
-variable "instance_shape_config_memory_in_gbs" { default = 6 }
-
-provider "oci" {
-  region           = var.region
-  tenancy_ocid     = var.tenancy_ocid
-  user_ocid        = var.user_ocid
-  fingerprint      = var.fingerprint
-  private_key_path = var.private_key_path
-}
 # See https://docs.oracle.com/iaas/images/
 data "oci_core_images" "test_images" {
   compartment_id           = var.compartment_ocid
@@ -62,12 +17,11 @@ resource "oci_core_virtual_network" "test_vcn" {
   display_name   = "testVCN"
   dns_label      = "testvcn"
 }
-
+# add data source to list AD1 name in the tenancy. Should work for both single and multi Ad region 
 data "oci_identity_availability_domain" "ad" {
   compartment_id = var.tenancy_ocid
   ad_number      = 1
 }
-
 resource "oci_core_subnet" "test_subnet" {
   cidr_block        = "10.1.20.0/24"
   display_name      = "testSubnet"
@@ -142,10 +96,10 @@ resource "oci_core_security_list" "test_security_list" {
 // Instances
 
 resource "oci_core_instance" "free_instance0" {
-  availability_domain = data.oci_identity_availability_domain.ad.name
-  compartment_id      = var.compartment_ocid
-  display_name        = "freeInstance0"
-  shape               = var.instance_shape
+  availability_domain  =  data.oci_identity_availability_domain.ad.name
+  compartment_id       = var.compartment_ocid
+  display_name         = "freeInstance0"
+  shape                = var.instance_shape
   fault_domain = "FAULT-DOMAIN-3"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
@@ -153,13 +107,18 @@ resource "oci_core_instance" "free_instance0" {
     assign_public_ip = true
     hostname_label   = "freeinstance0"
   }
-
   source_details {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
     boot_volume_size_in_gbs = 50
   }
- 
+  /*
+  shape_config {
+        memory_in_gbs = 6
+        ocpus = 1
+  }
+  */
+
   metadata = {
     ssh_authorized_keys = file(var.ssh_public_key)
     user_data = base64encode(file("./cloud-init/vm.cloud-config"))
@@ -178,6 +137,12 @@ resource "oci_core_instance" "free_instance1" {
     assign_public_ip = true
     hostname_label   = "freeinstance1"
   }
+  /*
+  shape_config {
+        memory_in_gbs = 6
+        ocpus = 1
+  }
+  */
   source_details {
     source_type = "image"
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
