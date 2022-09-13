@@ -51,14 +51,57 @@ Aqui los parametros son opcionales (*-t Nombre_Perfil*), pero para simplicidad s
 
 ![Respuesta de Python local](./Imagenes/Respuesta_Python_Local.png)
 
+## CLI
 
-## Ejercicio de Prueba de Terraform desde CLI y desde Resource Manager
-![Terraform Demo](./Imagenes/TF_Demo.png)
+Cuando ya se tiene instalado el OCI CLI, se pueden ejecutar scripts o solamente sentencias solas. Sugerencia es usar jq como parser para las salidas JSON y asi concatenar llamadas CLI.
+Por ejemplo, invocandolo desde el Cloud Shell,
 
-Ejercicios adaptados de:
+```oci iam compartment list```
 
-https://github.com/oracle/terraform-provider-oci/blob/master/examples/always_free/main.tf
+![Respuesta de CLI Cloudshell](./Imagenes/Respuesta_CLI_CloudShell.png)
 
-y de:
+o haciendo la llamada local, usando tambien un perfil preestablecido (PERSONAL).
+```oci iam compartment list --profile PERSONAL```
 
-http://www.brokedba.com/2020/07/terraform-for-dummies-launch-instance.html
+![Respuesta de CLI Local](./Imagenes/Respuesta_CLI_Local.png)
+
+## Terraform Local:
+
+Para este ejercicio se usara el Terraform Local cuyo codigo esta en la carpeta [Desde_CLI](./Desde_CLI/), despues de realizar la [instalacion de Terraform](https://learn.hashicorp.com/tutorials/terraform/install-cli)
+
+Entonces se modificara las variables adecuadas en el archivo terraform.vars que son las mismas que se usan para [configurar el OCI CLI](https://docs.oracle.com/es-ww/iaas/Content/API/SDKDocs/cliinstall.htm) y una [instancia Linux a trabes de SSH](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/testingconnection.htm)
+
+Se ejecutan los ciclos de:
+
+**terraform init**
+**terraform plan**
+**terraform apply**
+
+El objetivo es crear un balanceador con 2 instancias sencillas mostrando metadata de la instancia.
+
+![Imagen desde OKIT en CLI](./Imagenes/okit_Desde_CLI.png)
+
+## Terraform Remoto:
+
+Se comparan los archivos de Terraform Local y Remoto, antes de generar el archivo comprimido y cargarlo en Resource Manager.
+
+Es mas sencillo este despliegue, sin embargo tiene ejecucion como CloudInit y redes.
+
+![Imagen desde OKIT en RM](./Imagenes/okit_Desde_RM.png)
+
+Estos ejercicios usando Terraform, se tomaron desde [GitHub](https://github.com/oracle/terraform-provider-oci/blob/master/examples/always_free/main.tf) y desde [Blogs](http://www.brokedba.com/2020/07/terraform-for-dummies-launch-instance.html)
+
+
+## OCI designer ToolKIT - OKIT
+
+Existe diferentes maneras para ejecutarlo:
+
+- [Tutorial en español para ejecutarlo localmente](https://www.itsimplenow.com/como-instalar-oracle-okit-designer-linux-windows/#creando-archivo-de-configuraci%C3%B3n-de-okit-y-la-llave-ssh-para-conectarnos-a-la-api-de-oci)
+- [Instalacion Oficial de OKIT](https://github.com/oracle/oci-designer-toolkit/blob/master/documentation/Installation.md#install-on-oci-instance)
+
+Pagina Oficial de [OKIT](https://github.com/oracle/oci-designer-toolkit)
+
+
+![OKIT Funcionando](./Imagenes/okit.png)
+
+francisco.m.moreno@oracle.com
