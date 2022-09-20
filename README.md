@@ -27,7 +27,11 @@ La respuesta es:
 
 ![Terraform Demo](./Imagenes/Respuesta_Ansible.png)
 
-Tambien se puede realizar un ejemplo usando un despliegue de instancia y sus conexiones de red.
+Tambien se puede realizar un ejemplo usando un despliegue de instancia y sus conexiones de red. El codigo se adapto de [Ejemplos de Ansible para OCI](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/ansiblesamples.htm), y se puede visualizar en esta [carpeta](./Ansible/always_free_launch_compute_instance/)
+
+El grafico obtenido es:
+
+![Imagen desde OKIT en Ansible](./Imagenes/okit_okit_Desde_Ansible.png)
 
 
 ### CLI:
