@@ -145,7 +145,7 @@
 
     - name: Sleep for 300 seconds and continue with play
       ansible.builtin.wait_for:
-          timeout: 1800
+          timeout: 300
       delegate_to: localhost
 
     - import_tasks: teardown.yaml
