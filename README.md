@@ -31,7 +31,7 @@ Tambien se puede realizar un ejemplo usando un despliegue de instancia y sus con
 
 El grafico obtenido es:
 
-![Imagen desde OKIT en Ansible](./Imagenes/okit_okit_Desde_Ansible.png)
+![Imagen desde OKIT en Ansible](./Imagenes/okit_Desde_Ansible.png)
 
 
 ### CLI:
