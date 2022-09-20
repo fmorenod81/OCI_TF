@@ -18,7 +18,7 @@ y se ingresa a la carpeta
 
 ### Ansible: 
 
-El archivo se llama [sample.yaml](./Ansible/sample.yaml), que muestra el nombre del namespace del tenant actual. El ansible esta instalado por defecto en el Cloud Shell, y para el computador local se siguen las [instrucciones para su instalacion](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
+El ejemplo mas sencillo se llama [sample.yaml](./Ansible/sample.yaml), que muestra el nombre del namespace del tenant actual. El ansible esta instalado por defecto en el Cloud Shell, y para el computador local se siguen las [instrucciones para su instalacion](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html)
 
 Su ejecucion se realiza asi:
 ```ansible-playbook sample.yaml```
@@ -26,6 +26,8 @@ Su ejecucion se realiza asi:
 La respuesta es:
 
 ![Terraform Demo](./Imagenes/Respuesta_Ansible.png)
+
+Tambien se puede realizar un ejemplo usando un despliegue de instancia y sus conexiones de red.
 
 
 ### CLI:
