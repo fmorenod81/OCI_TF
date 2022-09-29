@@ -96,20 +96,20 @@ resource "oci_core_security_list" "test_security_list" {
 // Instances
 
 resource "oci_core_instance" "free_instance0" {
-  availability_domain  =  data.oci_identity_availability_domain.ad.name
-  compartment_id       = var.compartment_ocid
-  display_name         = "freeInstance0_desdeRM"
-  shape                = var.instance_shape
-  fault_domain = "FAULT-DOMAIN-1"
-    create_vnic_details {
+  availability_domain = data.oci_identity_availability_domain.ad.name
+  compartment_id      = var.compartment_ocid
+  display_name        = "freeInstance0_desdeRM"
+  shape               = var.instance_shape
+  fault_domain        = "FAULT-DOMAIN-1"
+  create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
     assign_public_ip = true
     hostname_label   = "freeinstance0"
   }
   source_details {
-    source_type = "image"
-    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    source_type             = "image"
+    source_id               = lookup(data.oci_core_images.test_images.images[0], "id")
     boot_volume_size_in_gbs = 50
   }
 
@@ -117,5 +117,91 @@ resource "oci_core_instance" "free_instance0" {
     ssh_authorized_keys = var.ssh_public_key
     user_data           = base64encode(var.user_data)
   }
-  
+
+}
+resource "oci_core_instance" "free_instance1" {
+  availability_domain = data.oci_identity_availability_domain.ad.name
+  compartment_id      = var.compartment_ocid
+  display_name        = "freeInstance1_desdeRM"
+  shape               = var.instance_shape
+  fault_domain        = "FAULT-DOMAIN-3"
+  create_vnic_details {
+    subnet_id        = oci_core_subnet.test_subnet.id
+    display_name     = "primaryvnic"
+    assign_public_ip = true
+    hostname_label   = "freeinstance1"
+  }
+  source_details {
+    source_type             = "image"
+    source_id               = lookup(data.oci_core_images.test_images.images[0], "id")
+    boot_volume_size_in_gbs = 50
+  }
+
+  metadata = {
+    ssh_authorized_keys = var.ssh_public_key
+    user_data           = base64encode(var.user_data)
+  }
+
+}
+
+// Load Balancer 
+
+resource "oci_load_balancer_load_balancer" "free_load_balancer" {
+  #Required
+  compartment_id = var.compartment_ocid
+  display_name   = "alwaysFreeLoadBalancer"
+  shape          = "flexible"
+  shape_details {
+    maximum_bandwidth_in_mbps = 10
+    minimum_bandwidth_in_mbps = 10
+  }
+
+  subnet_ids = [
+    oci_core_subnet.test_subnet.id,
+  ]
+}
+
+resource "oci_load_balancer_backend_set" "free_load_balancer_backend_set" {
+  name             = "lbBackendSet1"
+  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
+  policy           = "ROUND_ROBIN"
+
+  health_checker {
+    port                = "80"
+    protocol            = "HTTP"
+    response_body_regex = ".*"
+    url_path            = "/"
+  }
+
+  session_persistence_configuration {
+    cookie_name      = "lb-session1"
+    disable_fallback = true
+  }
+}
+
+resource "oci_load_balancer_backend" "free_load_balancer_test_backend0" {
+  #Required
+  backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
+  ip_address       = oci_core_instance.free_instance0.private_ip
+  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
+  port             = "80"
+}
+resource "oci_load_balancer_backend" "free_load_balancer_test_backend1" {
+  #Required
+  backendset_name  = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
+  ip_address       = oci_core_instance.free_instance1.private_ip
+  load_balancer_id = oci_load_balancer_load_balancer.free_load_balancer.id
+  port             = "80"
+}
+
+resource "oci_load_balancer_listener" "load_balancer_listener0" {
+  load_balancer_id         = oci_load_balancer_load_balancer.free_load_balancer.id
+  name                     = "http"
+  default_backend_set_name = oci_load_balancer_backend_set.free_load_balancer_backend_set.name
+  port                     = 80
+  protocol                 = "HTTP"
+
+  connection_configuration {
+    idle_timeout_in_seconds = "240"
+  }
 }

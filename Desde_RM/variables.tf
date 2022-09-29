@@ -7,7 +7,7 @@ variable "tenancy_ocid" {}
 variable "region" {}
 
 variable "instance_shape" {
-  default="VM.Standard.E2.1.Micro"
+  default = "VM.Standard.E2.1.Micro"
 }
 variable "ssh_public_key" {}
 variable "user_data" {}
@@ -15,8 +15,8 @@ variable "user_data" {}
 provider "oci" {
   tenancy_ocid = var.tenancy_ocid
   region       = var.region
-  version      = 3.66
+  version      = 4.91
 }
 terraform {
-  required_version = ">= 0.12.0"
+  required_version = ">= 1.1.0"
 }    
