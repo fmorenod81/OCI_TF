@@ -12,8 +12,16 @@ output "private_ip" {
   value       = [oci_core_instance.free_instance0.private_ip]
 }
 
-output "public_ip" {
-  description = "Public IPs of created instances. "
+output "public_ip0" {
+  description = "Public IPs of created instances. Instance0. "
   value       = [oci_core_instance.free_instance0.public_ip]
 }
-  
+output "public_ip1" {
+  description = "Public IPs of created instances. Instance1"
+  value       = [oci_core_instance.free_instance1.public_ip]
+}
+
+output "loadbalancer_ip" {
+  description = "Public IPs of Load Balancer. "
+  value       = [oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address]
+}
