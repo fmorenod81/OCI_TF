@@ -143,6 +143,10 @@
       debug:
         msg: "SSH response from instance -> {{ result.stdout_lines }}"
 
+    - name: Print SSH command to link
+      debug:
+        msg: ssh  -i {{ temp_certificates_path }}/private_key.pem opc@{{ instance_public_ip }}
+
     - name: Sleep for 300 seconds and continue with play
       ansible.builtin.wait_for:
           timeout: 300

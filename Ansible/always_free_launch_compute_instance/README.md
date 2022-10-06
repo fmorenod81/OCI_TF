@@ -24,9 +24,13 @@ ansible-galaxy collection install oracle.oci
 Then 
 
 ```
+
 export SAMPLE_COMPARTMENT_OCID=ocid1.compartment.oc1..aaaaaaaa5mqnffv37esqfvwdkem3oktflilzuzt3k3drikogaptkyncozmrq
 
 export SAMPLE_IMAGE_OCID=ocid1.image.oc1.iad.aaaaaaaanpammf3j2xcbcoykbwlk3m35ko6svsdj2sut2fjtmnmujcnh3pvq 
+
+ansible-playbook sample.yaml
+
 ```
 
 Taken from:
