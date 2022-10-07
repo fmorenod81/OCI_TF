@@ -34,4 +34,6 @@ ansible-playbook sample.yaml
 ```
 
 Taken from:
-Compartments and https://docs.oracle.com/en-us/iaas/images/image/34818645-b3f2-4066-8748-2d47f4698f96/ compatible image with AMD.E2.1.micro
+Compartments, https://docs.oracle.com/en-us/iaas/images/image/34818645-b3f2-4066-8748-2d47f4698f96/
+and add the Cloud-Init https://github.com/oracle/oci-ansible-collection/tree/master/samples/compute/service_gateway 
+compatible image with AMD.E2.1.micro

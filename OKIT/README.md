@@ -1,4 +1,7 @@
-README.md
+# OKIT
+
+Se tendria que tener un docker instalado y ejecutandose.
+Para estos elementos sencillos, 
 Iniciar el Cloud Shell
 Revisar el 
 

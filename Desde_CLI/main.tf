@@ -100,7 +100,7 @@ resource "oci_core_instance" "free_instance0" {
   compartment_id       = var.compartment_ocid
   display_name         = "freeInstance0"
   shape                = var.instance_shape
-  fault_domain = "FAULT-DOMAIN-3"
+  fault_domain         = "FAULT-DOMAIN-3"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
@@ -109,7 +109,7 @@ resource "oci_core_instance" "free_instance0" {
   }
   source_details {
     source_type = "image"
-    source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
+    source_id = lookup(data.oci_core_images.test_images.images[0], "id")
     boot_volume_size_in_gbs = 50
   }
   /*
@@ -130,7 +130,7 @@ resource "oci_core_instance" "free_instance1" {
   compartment_id      = var.compartment_ocid
   display_name        = "freeInstance1"
   shape               = var.instance_shape
-  fault_domain = "FAULT-DOMAIN-2"
+  fault_domain        = "FAULT-DOMAIN-2"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
@@ -148,10 +148,12 @@ resource "oci_core_instance" "free_instance1" {
     source_id   = lookup(data.oci_core_images.test_images.images[0], "id")
     boot_volume_size_in_gbs = 50
   }
+
   metadata = {
     ssh_authorized_keys = file(var.ssh_public_key)
     user_data = base64encode(file("./cloud-init/vm.cloud-config"))
   }
+  
 }
 
 // Load Balancer 
