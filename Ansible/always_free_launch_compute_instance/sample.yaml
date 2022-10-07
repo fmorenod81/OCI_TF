@@ -68,6 +68,7 @@
             subnet_id: "{{ instance_subnet_id }}"
         metadata:
             ssh_authorized_keys: "{{ lookup('file',  my_test_public_key ) }}"
+            user_data: "{{ lookup('file',  '{{ user_data_path }}' ) | b64encode }}"
       register: result
 
     - name: Print instance details

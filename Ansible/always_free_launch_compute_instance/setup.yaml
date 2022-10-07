@@ -163,3 +163,10 @@
   register: result
 - set_fact:
     instance_subnet_id: "{{ result.subnet.id }}"
+
+- name: Generate user data script from the template
+  template:
+    src: "./templates/vm.cloud-config.tpl"
+    dest: "{{ temp_certificates_path }}/user_data"
+- set_fact:
+    user_data_path: "{{ temp_certificates_path }}/user_data"
