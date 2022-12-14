@@ -92,9 +92,12 @@ Entonces se modificara las variables adecuadas en el archivo terraform.vars que 
 
 Se ejecutan los ciclos de:
 
-**terraform init**
-**terraform plan**
-**terraform apply --auto-approve**
+```terraform init```
+
+```terraform plan```
+
+```terraform apply --auto-approve```
+
 
 El objetivo es crear un balanceador con 2 instancias sencillas mostrando metadata de la instancia.
 
