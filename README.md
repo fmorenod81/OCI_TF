@@ -7,7 +7,7 @@
 
 ## Alcance
 
- 1. [Ansible] (#ansible)
+ 1. Ansible
  2. Command Line (CLI)
  3. Python SDK
  4. Terraform Localmente
