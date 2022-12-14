@@ -13,8 +13,8 @@ write_files:
         <div class="centered">Informacion Servidor</div>
         <table>
             <tr><td>HOSTNAME__</td><td>AAAA</td></tr>
-            <tr><td>PRIVATEIP_</td><td>XXXX</td></tr>
-            <tr><td>PUBLIC_IP_</td><td>ZZZZ</td></tr>
+            <tr><td>PUBLIC_IP_</td><td>XXXX</td></tr>
+            <tr><td>PRIVATEIP_</td><td>ZZZZ</td></tr>
             <tr><td>REGIONNAME</td><td>BBBB</td></tr>
             <tr><td>AVAIL_DOM_</td><td>CCCC</td></tr>
             <tr><td>FAULT_DOM_</td><td>DDDD</td></tr>

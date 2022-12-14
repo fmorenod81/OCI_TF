@@ -217,16 +217,3 @@ resource "oci_load_balancer_listener" "load_balancer_listener0" {
     idle_timeout_in_seconds = "240"
   }
 }
-
-
-output "Public_IP_LoadBalanceador" {
-  value = "http://${oci_load_balancer_load_balancer.free_load_balancer.ip_address_details[0].ip_address}"
-}
-
-output "Public_Ip_Salida0" {
-  value = "${oci_core_instance.free_instance0.public_ip}"
-}
-
-output "Public_Ip_Salida1" {
-  value = "${oci_core_instance.free_instance1.public_ip}"
-}
