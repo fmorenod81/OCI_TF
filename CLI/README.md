@@ -21,13 +21,25 @@ python list_compute_tags_in_tenancy.py -dt
 ##Local
 Para el caso Local, tendriamos que tener un profile o una seccion dentro del Config; y despues lanzar comandos en Windows como se ve en el archivo sample.bat
 ```
-oci iam compartment list --profile PERSONAL|jq ".data[] | select( .name | contains(\"Terraform\"))"|jq .\"id\" > TempFile
+oci iam compartment list --profile DEFAULT|jq ".data[] | select( .name | contains(\"oci\"))"|jq .\"id\" > TempFile
 set /p T= <TempFile
 del TempFile
-oci compute instance list -c %T% --profile PERSONAL
+oci compute instance list -c %T% --profile DEFAULT
 pause
 ```
+Si tienes un linux/mac se tiene que usar 
+```
+oci iam compartment list --profile DEFAULT|jq ".data[] | select( .name | contains(\"oci\"))"|jq .\"id\" |tr -d '"'> TempFile
+export T=$(cat TempFile)
+rm TempFile
+oci compute instance list -c $T --profile DEFAULT
+```
+
 y para ejecucion del Python de ejemplo, ejecutamos
 ```
-python list_compute_tags_in_tenancy.py -t PERSONAL
+python list_compute_tags_in_tenancy.py -t DEFAULT
+```
+Si tienes problemas con el paquete oci puedes usar para instalarlo como Administrador
+```
+pip install oci
 ```
