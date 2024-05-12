@@ -126,6 +126,12 @@ Pagina Oficial de [OKIT](https://github.com/oracle/oci-designer-toolkit)
 
 ![OKIT Funcionando](./Imagenes/okit.png)
 
-francisco.m.moreno@oracle.com
 
-14-Diciembre-2022
+## Instance Pool privado y Load Balancer Publico
+Este es el esquema mas conocido o de inicio y puede mirarse su implementancion en este [blog de A-Team](https://blogs.oracle.com/cloud-infrastructure/autoscaling-a-load-balanced-web-application) y [video](https://youtu.be/2A9tq3rDkVM). Adicionalmente, si se desea mayor performance, en vez de usar el Load Balancer se puede usar un NLB y la descripcion esta en este [blog](https://iwanhoogendoorn.nl/index.php/Using_the_public_facing_OCI_Network_Load_Balancer_(NLB)_to_expose_your_web_server_pool_to_the_internet)
+
+
+fmorenod@gmail.com
+
+Primera version: 14-Diciembre-2022
+Ultima actualizacion: 12-Mayo-2024
