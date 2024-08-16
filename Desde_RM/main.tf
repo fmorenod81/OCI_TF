@@ -12,10 +12,11 @@ data "oci_core_images" "test_images" {
 }
 // Network
 resource "oci_core_virtual_network" "test_vcn" {
-  cidr_block     = "10.1.0.0/16"
+  cidr_block     = format("10.%s.0.0/16",var.group_number)
+  
   compartment_id = var.compartment_ocid
-  display_name   = "testVCN"
-  dns_label      = "testvcn"
+  display_name   = format("testVCN%s",var.group_number)
+  dns_label = format("testVCN%s",var.group_number)
 }
 # add data source to list AD1 name in the tenancy. Should work for both single and multi Ad region 
 data "oci_identity_availability_domain" "ad" {
@@ -23,9 +24,9 @@ data "oci_identity_availability_domain" "ad" {
   ad_number      = 1
 }
 resource "oci_core_subnet" "test_subnet" {
-  cidr_block        = "10.1.20.0/24"
-  display_name      = "testSubnet"
-  dns_label         = "testsubnet"
+  cidr_block        = format("10.%s.1.0/24",var.group_number)
+  display_name      = format("testSubnet%s",var.group_number)
+  dns_label         = format("testSubnet%s",var.group_number)
   security_list_ids = [oci_core_security_list.test_security_list.id]
   compartment_id    = var.compartment_ocid
   vcn_id            = oci_core_virtual_network.test_vcn.id
@@ -35,14 +36,14 @@ resource "oci_core_subnet" "test_subnet" {
 
 resource "oci_core_internet_gateway" "test_internet_gateway" {
   compartment_id = var.compartment_ocid
-  display_name   = "testIG"
+  display_name   = format("testIG%s",var.group_number)
   vcn_id         = oci_core_virtual_network.test_vcn.id
 }
 
 resource "oci_core_route_table" "test_route_table" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.test_vcn.id
-  display_name   = "testRouteTable"
+  display_name   = format("testRouteTable%s",var.group_number)
 
   route_rules {
     destination       = "0.0.0.0/0"
@@ -54,7 +55,7 @@ resource "oci_core_route_table" "test_route_table" {
 resource "oci_core_security_list" "test_security_list" {
   compartment_id = var.compartment_ocid
   vcn_id         = oci_core_virtual_network.test_vcn.id
-  display_name   = "testSecurityList"
+  display_name   = format("testSecurityList%s",var.group_number)
 
   egress_security_rules {
     protocol    = "6"
@@ -98,14 +99,14 @@ resource "oci_core_security_list" "test_security_list" {
 resource "oci_core_instance" "free_instance0" {
   availability_domain  =  data.oci_identity_availability_domain.ad.name
   compartment_id       = var.compartment_ocid
-  display_name         = "freeInstance0_desdeRM"
+  display_name         = format("freeInstance0_Group%s",var.group_number)
   shape                = var.instance_shape
   fault_domain         = "FAULT-DOMAIN-1"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
     assign_public_ip = true
-    hostname_label   = "freeinstance0"
+    hostname_label   = format("freeinstance0%s",var.group_number)
   }
   source_details {
     source_type = "image"
@@ -113,23 +114,31 @@ resource "oci_core_instance" "free_instance0" {
     boot_volume_size_in_gbs = 50
   }
 
+  shape_config {
+        memory_in_gbs = 6
+        ocpus = 1
+  }
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(var.user_data)
+    user_data = var.user_data==""?base64encode(file("./vm.cloud-config")):base64encode(var.user_data)
   }
 }
 
 resource "oci_core_instance" "free_instance1" {
   availability_domain = data.oci_identity_availability_domain.ad.name
   compartment_id      = var.compartment_ocid
-  display_name        = "freeInstance1_desdeRM"
+  display_name        = format("freeInstance1_Group%s",var.group_number)
   shape               = var.instance_shape
   fault_domain        = "FAULT-DOMAIN-3"
   create_vnic_details {
     subnet_id        = oci_core_subnet.test_subnet.id
     display_name     = "primaryvnic"
     assign_public_ip = true
-    hostname_label   = "freeinstance1"
+    hostname_label   = format("freeinstance1%s",var.group_number)
+  }
+  shape_config {
+        memory_in_gbs = 6
+        ocpus = 1
   }
   source_details {
     source_type = "image"
@@ -139,7 +148,7 @@ resource "oci_core_instance" "free_instance1" {
 
   metadata = {
     ssh_authorized_keys = var.ssh_public_key
-    user_data = base64encode(var.user_data)
+    user_data = var.user_data==""?base64encode(file("./vm.cloud-config")):base64encode(var.user_data)
   }
 
 }
@@ -149,7 +158,7 @@ resource "oci_core_instance" "free_instance1" {
 resource "oci_load_balancer_load_balancer" "free_load_balancer" {
   #Required
   compartment_id = var.compartment_ocid
-  display_name   = "alwaysFreeLoadBalancer"
+  display_name   = format("LoadBalancer%s",var.group_number)
   shape          = "flexible"
   shape_details {
     maximum_bandwidth_in_mbps = 10

@@ -6,10 +6,15 @@ variable "compartment_ocid" {}
 variable "tenancy_ocid" {}
 variable "region" {}
 
-variable "instance_shape" {
-  default = "VM.Standard.E2.1.Micro"
+variable "group_number" {
+
 }
-variable "ssh_public_key" {}
+variable "instance_shape" {
+  default = "VM.Standard.E4.Flex"
+}
+variable "ssh_public_key" {
+  default = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCZA1tKUesEnLKpoJWSZf+7tHAX3iVyWbjBnNhsSylHm9PGN3xYR6fZIfVb10+5hBmLLXmOmPwema7KlKYprjbBVjrvxrVrlqf1/uz9pOX9ojhHq4RSIf0nl7F1dFEYS2ONyX4tr61tYHYd7nrCFiwJJwXH25VzRmDYi6lOKkstvsKN681m3VcePiuHLwiCVv+DRAdS12B6VYTd5WMS3CtqJygFShcDgtXnLGzeVMfYiF5bCHO6spZftjbfnd4LNJl1Nc8hbrA6r0eXFYEVEF61Cut7zjKbbraAbvE2iL0qyTbXI5ap5NKLL3vhx1TtcbayCsqXg9C9Yf61oSQg8rm7 ssh-key-2024-03-07"
+}
 variable "user_data" {}
 
 provider "oci" {

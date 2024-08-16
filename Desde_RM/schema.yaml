@@ -41,13 +41,22 @@
       title: ${Messages.solutionsHub.genericVariables.region.title()}
       description: ${Messages.solutionsHub.genericVariables.region.description()}
 
+    group_number:
+      type: text
+      required: true
+      default: ""
+      title: "Escribir solamente el numero"
+      description: "Escribir solamente el numero"
 
     instance_shape:
-      type: oci:core:instanceshape:name
+      type: enum
       required: true
-      title: ${Messages.solutionsHub.solutions.computeInstance.variables.instance_shape.title()}
-      description: ${Messages.solutionsHub.solutions.computeInstance.variables.instance_shape.description()}
-      default: "VM.Standard.E2.1.Micro"
+      title: "Tamano de instancia: Seleccione uno de los 2 instancias flexibles"
+      description: "Tamano de instancia: Seleccione uno de los 2 instancias flexibles"
+      default: "VM.Standard.E4.Flex"
+      enum:
+      - "VM.Standard.E4.Flex"
+      - "VM.Standard.E5.Flex"
       dependsOn:
         compartmentId: compartment_ocid
 
@@ -58,12 +67,12 @@
       required: false
       default: [""]
       pattern: "((^(ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)(,((ssh-rsa AAAAB3NzaC1yc2|ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNT|ecdsa-sha2-nistp384 AAAAE2VjZHNhLXNoYTItbmlzdHAzODQAAAAIbmlzdHAzOD|ecdsa-sha2-nistp521 AAAAE2VjZHNhLXNoYTItbmlzdHA1MjEAAAAIbmlzdHA1Mj|ssh-ed25519 AAAAC3NzaC1lZDI1NTE5|ssh-dss AAAAB3NzaC1kc3)[0-9A-Za-z+\/]+[=]{0,3})( [^,]*)?)*$"
-      title: ${Messages.solutionsHub.solutions.computeInstance.variables.ssh_public_key.title()}
-      description: ${Messages.solutionsHub.solutions.computeInstance.variables.ssh_public_key.description()}
+      title: "Deje vacio o ingrese la llave publica de las instancias"
+      description: "Llave publica de las instancias SSH. El instructor tiene la llave privada"
 
     user_data:
       type: text
       required: false
       default: ""
-      title: ${Messages.solutionsHub.solutions.computeInstance.variables.user_data.title()}
-      description: ${Messages.solutionsHub.solutions.computeInstance.variables.user_data.description()}
+      title: "Codigo que ejecuta cuando la VM inicia"
+      description: "Codigo que ejecuta cuando la VM inicia. Si esta vacia tiene una aplicacion sencilla"
